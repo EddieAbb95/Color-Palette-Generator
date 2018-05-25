@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Palette Generator</title>
+
+    <!-- This should be it's own file but I want to keep these ideas small -->
+    <style>
+        .colorLabel {
+            font-family: 'Courier New';
+            color: #f3f3f3;
+            text-align: center;
+
+        }
+
+        .colorDiv {
+            width: 20%;
+            height: 400px;
+            display: inline-block;
+        }
+
+    </style>
+
+</head>
+<body onload="colorize();" onclick="colorize();">
+    <div id="ColorsParentDiv">
+        <div class="colorDiv"><h4 class="colorLabel"></h4>
+        </div><div class="colorDiv"><h4 class="colorLabel"></h4>
+        </div><div class="colorDiv"><h4 class="colorLabel"></h4>
+        </div><div class="colorDiv"><h4 class="colorLabel"></h4>
+        </div><div class="colorDiv"><h4 class="colorLabel"></h4>
+        </div>
+    </div>
+</body>
+</html>
+
+<!-- Same thing as the css.. I know -->
+<script type="text/javascript">
+    //Generate the new palette colors following 1 of 3 rules
+    //Follows rules from: https://gamedevelopment.tutsplus.com/articles/picking-a-color-palette-for-your-games-artwork--gamedev-1174
+    function colorize(){
+        var colors = generateUnequalHuePalette();
+
+        //Get all the color divs.
+        var colorDivs = document.getElementById("ColorsParentDiv").getElementsByTagName("div");
+
+        for (i = 0; i < colorDivs.length; i++) {
+            //set the color of the div
+            colorDivs[i].style.backgroundColor = colors[i];
+
+            //set the label to the HSL value
+            colorDivs[i].getElementsByTagName("h4")[0].innerText = colors[i];
+        }
+    }
+
+    //Generates a 5 color palette following the rule where if the hue does not match
+    //then both sat and light should.
+    function generateUnequalHuePalette() {
+        //color array (Stored as HSL strings ex: "hsl(155,100%,30%)"
+        var colors = new Array(5);
+
+        //Generate the hue as a random offset to start at. Step will be added each iteration.
+        hue = generateRandomInRange(0, 360);
+        step = generateRandomInRange(36, 72);
+
+        //These are kept the same between all 5 colors
+        sat = generateRandomInRange(40, 85);
+        light = generateRandomInRange(40, 60);
+
+        //Generate 5 random HSL colors
+        for (h = 0; h < 5; h++) {
+            hue += step;
+            hue = hue > 360 ? hue % 360 : hue;
+            colors[h] = "hsl(" + hue + "," + sat + "%," + light + "%)";
+        }
+
+        return colors;
+    }
+
+    //Generate a random number that is between start and end. Both limits are inclusive
+    function generateRandomInRange(start, end) {
+        return Math.floor(Math.random() * (end - start) + 1) + start;
+    }
+</script>
